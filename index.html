@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, Aishu! 🎉</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <style>
+        *,
+        *::after,
+        *::before {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --dark-color: #000;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: var(--dark-color);
+            overflow: hidden;
+            perspective: 1000px;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        /* Intro Screen */
+        .intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #a8edea 0%, #c5f4e0 50%, #e0f7fa 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.8s ease-in-out;
+            cursor: pointer;
+        }
+
+        .press-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: #1a5f7a;
+            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.5);
+            letter-spacing: 2px;
+            animation: pulse 2s infinite;
+        }
+
+        /* Floating Elements Canvas */
+        #floatingCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        /* Birthday Message */
+        .content {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 4;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            pointer-events: none;
+        }
+
+        .content.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .birthday-message {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 3rem 4rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            color: #fff;
+            max-width: 90%;
+            width: auto;
+        }
+
+        .birthday-message h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, #33ccff 0%, #9a63e1 50%, #66ffcc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            letter-spacing: 2px;
+            filter: drop-shadow(0 2px 8px #00c3ff66);
+            transition: background 0.5s;
+        }
+
+        .birthday-message p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .special-wish {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        .decorations {
+            margin-top: 2rem;
+            opacity: 0;
+            animation: iconFadeIn 0.5s ease-out forwards;
+            animation-delay: 2s;
+        }
+
+        .icon {
+            font-size: 1.8rem;
+            margin: 0 0.5rem;
+        }
+
+        /* Animation Container */
+        .animation-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            opacity: 1;
+            transition: opacity 1s ease-in-out;
+            pointer-events: none;
+        }
+
+        .animation-container.visible {
+            opacity: 1;
+        }
+
+        /* Night Background */
+        .night {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+
+        /* Animation Keyframes */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes iconFadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Flower Styles */
+        .flowers {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .flower {
+            position: absolute;
+            bottom: 0;
+            transform-origin: bottom center;
+            z-index: 2;
+        }
+
+        .flower--1 { left: 45vw; transform: rotate(-20deg); }
+        .flower--2 { left: 50vw; transform: none; }
+        .flower--3 { left: 55vw; transform: rotate(20deg); }
+
+        .flower__leafs {
+            position: relative;
+            animation: blooming-flower 2s backwards;
+        }
+
+        .flower__leafs--1 {
+            animation-delay: 1.1s;
+        }
+
+        .flower__leafs--2 {
+            animation-delay: 1.4s;
+        }
+
+        .flower__leafs--3 {
+            animation-delay: 1.7s;
+        }
+
+        .flower__leaf {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 8vmin;
+            height: 11vmin;
+            border-radius: 51% 49% 47% 53%/44% 45% 55% 69%;
+            background-color: #a7ffee;
+            background-image: linear-gradient(to top, #54b8aa, #a7ffee);
+            transform-origin: bottom center;
+            opacity: 0.9;
+            box-shadow: inset 0 0 2vmin rgba(255, 255, 255, 0.5);
+        }
+
+        .flower__leaf--1 {
+            transform: translate(-10%, 1%) rotateY(40deg) rotateX(-50deg);
+        }
+
+        .flower__leaf--2 {
+            transform: translate(-50%, -4%) rotateX(40deg);
+        }
+
+        .flower__leaf--3 {
+            transform: translate(-90%, 0%) rotateY(45deg) rotateX(50deg);
+        }
+
+        .flower__leaf--4 {
+            width: 8vmin;
+            height: 8vmin;
+            transform-origin: bottom left;
+            border-radius: 4vmin 10vmin 4vmin 4vmin;
+            transform: translate(0%, 18%) rotateX(70deg) rotate(-43deg);
+            background-image: linear-gradient(to top, #39c6d6, #a7ffee);
+            z-index: 1;
+            opacity: 0.8;
+        }
+
+        .flower__white-circle {
+            position: absolute;
+            left: -3.5vmin;
+            top: -3vmin;
+            width: 9vmin;
+            height: 4vmin;
+            border-radius: 50%;
+            background-color: #fff;
+        }
+
+        .flower__line {
+            height: 55vmin;
+            width: 1.5vmin;
+            background-image: linear-gradient(to left, rgba(0, 0, 0, 0.2), transparent, rgba(255, 255, 255, 0.2)),
+                linear-gradient(to top, transparent 10%, #14757a, #39c6d6);
+            box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.5);
+            animation: grow-flower-tree 4s backwards;
+        }
+
+        .flower__line__leaf {
+            --w: 7vmin;
+            --h: calc(var(--w) + 2vmin);
+            position: absolute;
+            top: 20%;
+            left: 90%;
+            width: var(--w);
+            height: var(--h);
+            border-top-right-radius: var(--h);
+            border-bottom-left-radius: var(--h);
+            background-image: linear-gradient(to top, rgba(20, 117, 122, 0.4), #39c6d6);
+        }
+
+        .flower__light {
+            position: absolute;
+            bottom: 0vmin;
+            width: 1vmin;
+            height: 1vmin;
+            background-color: #fffb00;
+            border-radius: 50%;
+            filter: blur(0.2vmin);
+            animation: light-ans 4s linear infinite backwards;
+        }
+
+        .flower__light:nth-child(odd) {
+            background-color: #23f0ff;
+        }
+
+        .flower__light--1 {
+            left: -2vmin;
+            animation-delay: 1s;
+        }
+
+        .flower__light--2 {
+            left: 3vmin;
+            animation-delay: 0.5s;
+        }
+
+        .flower__light--3 {
+            left: -6vmin;
+            animation-delay: 0.3s;
+        }
+
+        .flower__light--4 {
+            left: 6vmin;
+            animation-delay: 0.9s;
+        }
+
+        .flower__light--5 {
+            left: -1vmin;
+            animation-delay: 1.5s;
+        }
+
+        .flower__light--6 {
+            left: -4vmin;
+            animation-delay: 3s;
+        }
+
+        .flower__light--7 {
+            left: 3vmin;
+            animation-delay: 2s;
+        }
+
+        .flower__light--8 {
+            left: -6vmin;
+            animation-delay: 3.5s;
+        }
+
+        @keyframes moving-flower-1 {
+            0%, 100% {
+                transform: rotate(2deg);
+            }
+            50% {
+                transform: rotate(-2deg);
+            }
+        }
+
+        @keyframes moving-flower-2 {
+            0%, 100% {
+                transform: rotate(18deg);
+            }
+            50% {
+                transform: rotate(14deg);
+            }
+        }
+
+        @keyframes moving-flower-3 {
+            0%, 100% {
+                transform: rotate(-18deg);
+            }
+            50% {
+                transform: rotate(-20deg) rotateY(-10deg);
+            }
+        }
+
+        @keyframes blooming-leaf-right {
+            0% {
+                transform-origin: left;
+                transform: rotate(70deg) rotateY(30deg) scale(0);
+            }
+        }
+
+        @keyframes blooming-leaf-left {
+            0% {
+                transform-origin: right;
+                transform: rotate(-70deg) rotateY(30deg) scale(0);
+            }
+        }
+
+        @keyframes grow-flower-tree {
+            0% {
+                height: 0;
+                border-radius: 1vmin;
+            }
+        }
+
+        @keyframes blooming-flower {
+            0% {
+                transform: scale(0);
+            }
+        }
+
+        @keyframes light-ans {
+            0% {
+                opacity: 0;
+                transform: translateY(0vmin);
+            }
+            25% {
+                opacity: 1;
+                transform: translateY(-5vmin) translateX(-2vmin);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(-15vmin) translateX(2vmin);
+                filter: blur(0.2vmin);
+            }
+            75% {
+                transform: translateY(-20vmin) translateX(-2vmin);
+                filter: blur(0.2vmin);
+            }
+            100% {
+                transform: translateY(-30vmin);
+                opacity: 0;
+                filter: blur(1vmin);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .press-text {
+                font-size: 2rem;
+            }
+
+            .birthday-message {
+                padding: 2rem;
+            }
+
+            .birthday-message h1 {
+                font-size: 2.5rem;
+            }
+
+            .birthday-message p {
+                font-size: 1rem;
+            }
+
+            .icon {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="not-loaded">
+    <!-- Intro Screen -->
+    <div class="intro-screen" id="intro-screen">
+        <div class="press-text">PRESS TO BEGIN 🎉</div>
+    </div>
+
+    <!-- Floating Elements -->
+    <canvas id="floatingCanvas"></canvas>
+
+    <!-- Birthday Message -->
+    <div class="content" id="main-content">
+        <div class="birthday-message">
+            <h1>Happy Birthday Aishwarya</h1>
+            <p>May your day bloom with peace, laughter, and quiet magic.</p>
+        </div>
+    </div>
+
+    <!-- Flower Animation -->
+    <div class="animation-container" id="animation-container">
+        <div class="night"></div>
+        <div class="flowers">
+            <div class="flower flower--1">
+                <div class="flower__leafs flower__leafs--1">
+                    <div class="flower__leaf flower__leaf--1"></div>
+                    <div class="flower__leaf flower__leaf--2"></div>
+                    <div class="flower__leaf flower__leaf--3"></div>
+                    <div class="flower__leaf flower__leaf--4"></div>
+                    <div class="flower__white-circle"></div>
+
+                    <div class="flower__light flower__light--1"></div>
+                    <div class="flower__light flower__light--2"></div>
+                    <div class="flower__light flower__light--3"></div>
+                    <div class="flower__light flower__light--4"></div>
+                    <div class="flower__light flower__light--5"></div>
+                    <div class="flower__light flower__light--6"></div>
+                    <div class="flower__light flower__light--7"></div>
+                    <div class="flower__light flower__light--8"></div>
+                </div>
+                <div class="flower__line">
+                    <div class="flower__line__leaf flower__line__leaf--1"></div>
+                    <div class="flower__line__leaf flower__line__leaf--2"></div>
+                    <div class="flower__line__leaf flower__line__leaf--3"></div>
+                    <div class="flower__line__leaf flower__line__leaf--4"></div>
+                    <div class="flower__line__leaf flower__line__leaf--5"></div>
+                    <div class="flower__line__leaf flower__line__leaf--6"></div>
+                </div>
+            </div>
+
+            <div class="flower flower--2">
+                <div class="flower__leafs flower__leafs--2">
+                    <div class="flower__leaf flower__leaf--1"></div>
+                    <div class="flower__leaf flower__leaf--2"></div>
+                    <div class="flower__leaf flower__leaf--3"></div>
+                    <div class="flower__leaf flower__leaf--4"></div>
+                    <div class="flower__white-circle"></div>
+
+                    <div class="flower__light flower__light--1"></div>
+                    <div class="flower__light flower__light--2"></div>
+                    <div class="flower__light flower__light--3"></div>
+                    <div class="flower__light flower__light--4"></div>
+                    <div class="flower__light flower__light--5"></div>
+                    <div class="flower__light flower__light--6"></div>
+                    <div class="flower__light flower__light--7"></div>
+                    <div class="flower__light flower__light--8"></div>
+                </div>
+                <div class="flower__line">
+                    <div class="flower__line__leaf flower__line__leaf--1"></div>
+                    <div class="flower__line__leaf flower__line__leaf--2"></div>
+                    <div class="flower__line__leaf flower__line__leaf--3"></div>
+                    <div class="flower__line__leaf flower__line__leaf--4"></div>
+                </div>
+            </div>
+
+            <div class="flower flower--3">
+                <div class="flower__leafs flower__leafs--3">
+                    <div class="flower__leaf flower__leaf--1"></div>
+                    <div class="flower__leaf flower__leaf--2"></div>
+                    <div class="flower__leaf flower__leaf--3"></div>
+                    <div class="flower__leaf flower__leaf--4"></div>
+                    <div class="flower__white-circle"></div>
+
+                    <div class="flower__light flower__light--1"></div>
+                    <div class="flower__light flower__light--2"></div>
+                    <div class="flower__light flower__light--3"></div>
+                    <div class="flower__light flower__light--4"></div>
+                    <div class="flower__light flower__light--5"></div>
+                    <div class="flower__light flower__light--6"></div>
+                    <div class="flower__light flower__light--7"></div>
+                    <div class="flower__light flower__light--8"></div>
+                </div>
+                <div class="flower__line">
+                    <div class="flower__line__leaf flower__line__leaf--1"></div>
+                    <div class="flower__line__leaf flower__line__leaf--2"></div>
+                    <div class="flower__line__leaf flower__line__leaf--3"></div>
+                    <div class="flower__line__leaf flower__line__leaf--4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Floating Elements Animation (restored to original size and quantity)
+        class Flower {
+            constructor(x, y, size) {
+                this.x = x;
+                this.y = y;
+                this.size = size;
+                this.baseSize = size;
+                this.angle = Math.random() * Math.PI * 2;
+                this.speed = 0.2 + Math.random() * 0.3;
+                this.oscillationSpeed = 0.02 + Math.random() * 0.02;
+                this.oscillationDistance = 30 + Math.random() * 20;
+                this.opacity = 0;
+                this.fadeIn = true;
+            }
+
+            update() {
+                this.angle += this.oscillationSpeed;
+                this.y -= this.speed;
+                this.x += Math.sin(this.angle) * this.oscillationDistance / 20;
+
+                if (this.fadeIn && this.opacity < 0.8) {
+                    this.opacity += 0.02;
+                } else if (!this.fadeIn && this.opacity > 0) {
+                    this.opacity -= 0.02;
+                }
+
+                this.size = this.baseSize * (0.9 + Math.sin(this.angle) * 0.1);
+            }
+
+            draw(ctx) {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+                ctx.globalAlpha = this.opacity;
+
+                // Draw flower petals
+                const petalCount = 5;
+                const petalSize = this.size;
+                ctx.fillStyle = '#a8edea';
+                for (let i = 0; i < petalCount; i++) {
+                    ctx.beginPath();
+                    ctx.ellipse(0, -petalSize/2, petalSize/3, petalSize/2, (Math.PI * 2 / petalCount) * i, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                // Draw flower center
+                ctx.beginPath();
+                ctx.fillStyle = '#c5f4e0';
+                ctx.arc(0, 0, petalSize/6, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        class FlowerAnimation {
+            constructor() {
+                this.canvas = document.getElementById('floatingCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.flowers = [];
+                this.resize();
+                this.init();
+                window.addEventListener('resize', () => this.resize());
+                this.animate();
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+            }
+
+            init() {
+                for (let i = 0; i < 25; i++) {
+                    this.addFlower();
+                }
+            }
+
+            addFlower() {
+                const x = Math.random() * this.canvas.width;
+                const y = this.canvas.height + 100;
+                const size = 30 + Math.random() * 20;
+                this.flowers.push(new Flower(x, y, size));
+            }
+
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.flowers = this.flowers.filter(flower => {
+                    flower.update();
+                    flower.draw(this.ctx);
+                    return flower.y > -100 && flower.opacity > 0;
+                });
+                if (Math.random() < 0.05 && this.flowers.length < 30) {
+                    this.addFlower();
+                }
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // Initialize everything when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const flowerAnimation = new FlowerAnimation();
+            const introScreen = document.getElementById('intro-screen');
+            const mainContent = document.getElementById('main-content');
+            const animationContainer = document.getElementById('animation-container');
+
+            // Start animations immediately
+            document.body.classList.remove('not-loaded');
+            animationContainer.classList.add('visible');
+            
+            // Handle intro screen click
+            introScreen.addEventListener('click', () => {
+                introScreen.style.opacity = '0';
+                introScreen.style.pointerEvents = 'none';
+                
+                setTimeout(() => {
+                    mainContent.classList.add('visible');
+                    
+                    gsap.from('.birthday-message', {
+                        duration: 1.5,
+                        y: 50,
+                        opacity: 0,
+                        ease: 'power3.out',
+                        delay: 0.2
+                    });
+
+                    gsap.from('.icon', {
+                        duration: 0.8,
+                        scale: 0,
+                        opacity: 0,
+                        stagger: 0.2,
+                        ease: 'back.out(1.7)',
+                        delay: 1.5
+                    });
+                }, 800);
+            });
+        });
+
+        // Add your flower animation JavaScript here
+        function bloomFlower() {
+            if (document.body.classList.contains('not-loaded')) {
+                document.body.classList.remove('not-loaded');
+            }
+        }
+    </script>
+</body>
+</html> 
